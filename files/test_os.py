@@ -1,33 +1,28 @@
 import os
+import shutil
 
-images_extentions = [".jpeg", ".jpg", ".png", ".gif"]
-doc_extentions = [".doc", ".docx", ".pdf", ".txt"]
-archives_extentions = [".zip", ".rar"]
+# Path of the desktop folder
+desktop_path = os.path.expanduser("~/Desktop")
 
+# Dictionary containing the folder names and their corresponding file extensions
+folders = {
+    "Images": [".jpeg", ".jpg", ".png", ".gif"],
+    "Documents": [".doc", ".docx", ".pdf", ".txt"],
+    "Archives": [".zip", ".rar"]
+}
 
-base_path = r"C:\Users\LENOVO X13\Desktop"
-dest_path  = r"C:\Users\LENOVO X13\Desktop\CleanedUp"
+# Create the subfolders if they don't exist
+for folder_name in folders:
+    folder_path = os.path.join(desktop_path, folder_name)
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
 
-entries = os.scandir(base_path)
-#os.path.splitext()
-
-for entry in entries:
-    #print("entry:", entry.name)
-    original_path_entry = os.path.join(base_path, entry.name)
-    dest_path_entry = os.path.join(dest_path, entry.name)
-    if os.path.isfile(entry):
-        extention = os.path.splitext(entry.name)[1]
-        #print("file extension is:", os.path.splitext(entry.name)[1])
-        if extention in images_extentions:
-            # move to Images 
-            pass
-        # os.renames(original_path_entry, dest_path_entry)
-
-
-
-#def__init__(self, *args):
- #   self.speed = args[0]
-  #  self.color = args[1]
-
-
-
+# Move files to the corresponding subfolder
+for file_name in os.listdir(desktop_path):
+    original_file_path = os.path.join(desktop_path, file_name)
+    if os.path.isfile(original_file_path):
+        for folder_name, extensions in folders.items():
+            for extension in extensions:
+                if file_name.endswith(extension):
+                    destination_folder = os.path.join(desktop_path, folder_name)
+                    shutil.move(original_file_path, destination_folder)
